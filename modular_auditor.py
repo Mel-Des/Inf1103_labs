@@ -19,14 +19,14 @@ def process_delivery(current_total, new_value):
 def calculate_tax(amount):
     return amount * 0.10
 
-def generate_report(total_inventory, failed_entries):
+def generate_report(total_units, failed_attempts):
     print("\n--- Audit Summary Report ---")
-    print(f"Total Units Processed: {total_inventory}")
-    print(f"Number of Failed/Rejected Entries: {failed_entries}")
+    print(f"Total Units Processed: {total_units}")
+    print(f"Number of Failed/Rejected Entries: {failed_attempts}")
 
 if __name__ == "__main__":
-    total_inventory = 0
-    failed_entries = 0
+    total_units= 0
+    failed_attempts = 0
 
     print("--- Modular Inventory Auditor System ---")
     print("Enter stock quantities to add. Type 'quit' to exit.\n")
@@ -39,21 +39,21 @@ if __name__ == "__main__":
             break
 
         if result is None:
-            failed_entries += 1
+            failed_attempts += 1
             print()
             continue
 
         delivery_amount = result
 
-        total_inventory = process_delivery(total_inventory, delivery_amount)
+        total_units = process_delivery(total_units, delivery_amount)
 
         tax_amount = calculate_tax(delivery_amount)
 
         print(f"Added {delivery_amount} units (Tax for this delivery: {tax_amount:.2f}).")
-        print(f"Current total inventory: {total_inventory}\n")
+        print(f"Current total inventory: {total_units}\n")
 
-        if total_inventory > 500:
+        if total_units > 500:
             print("Total inventory exceeds 500 units!")
             print("Shutting down system.")
 
-    generate_report(total_inventory, failed_entries)
+    generate_report(total_units, failed_attempts)
