@@ -16,6 +16,13 @@ def load_inventory():
     except FileNotFoundError:
         return 0,[]
 
+def save_inventory(total, transaction_history):
+    with open("inventory.txt", "w") as file:
+        file.write(str(total) + "\n")
+
+        for amount in transaction_history:
+            file.write(str(amount) + "\n")
+
 def load_orders():
     orders = []
 
@@ -48,6 +55,7 @@ def main():
         product_name = input("Enter Product Name: ")
 
         if product_name.lower() == "quit":
+            save_inventory(total, transaction_history)
             break
 
         quantity = int(input("Enter Quantity: "))
