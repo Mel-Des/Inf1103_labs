@@ -71,7 +71,8 @@ def main():
         print()
         print("Transaction History:")
         print(transaction_history)
-        save_order
+
+        save_order(new_order)
 
         print()
         print("Order Successfully saved to orders.txt")
