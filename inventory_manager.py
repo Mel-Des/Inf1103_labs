@@ -1,4 +1,7 @@
-inventory = [
+import json
+import os
+
+[
     {
         "id": "P001",
         "name": "Laptop",
@@ -19,7 +22,21 @@ inventory = [
     }
 ]
 
-def display_all():
+def load_inventory():
+    if os.path.exists("inventory.json"):
+        print("inventory.json found.")
+
+        with open("inventory.json", "r") as file:
+            inventory = json.load(file)
+
+        print("Inventory loaded successfully.")
+        return inventory
+
+    else:
+        print("inventory.json not found.")
+        return[]
+
+def display_all(inventory):
     print("\nCurrent Inventory")
     print("-" * 55)
 
@@ -28,9 +45,10 @@ def display_all():
             f"ID: {product['id']} | "
             f"Name {product['name']} | "
             f"Price: {product['price']:.2f} | "
-            f"Stock: {product['stcok']}"
+            f"Stock: {product['stock']}"
         )
 
     print("-" * 55)
 
-display_all()
+inventory = load_inventory()
+display_all(inventory)
