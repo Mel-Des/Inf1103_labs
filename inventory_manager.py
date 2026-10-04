@@ -1,27 +1,6 @@
 import json
 import os
 
-[
-    {
-        "id": "P001",
-        "name": "Laptop",
-        "price": 1200.00,
-        "stock": 15,
-    },
-    {
-        "id": "P002",
-        "name": "Mouse",
-        "price": 25.50,
-        "stock": 40,
-    },
-    {
-        "id": "P003",
-        "name": "Keyboard",
-        "price": 45.00,
-        "stock": 25,
-    }
-]
-
 def load_inventory():
     if os.path.exists("inventory.json"):
         print("inventory.json found.")
@@ -34,21 +13,34 @@ def load_inventory():
 
     else:
         print("inventory.json not found.")
+        print("Starting with an empty inventory.")
         return[]
 
+def save_inventory(inventory):
+    with open("inventory.json", "w")as file:
+        json.dump(inventory, file, indent=4)
+
+    print("Inventory saved successfully to inventory.json.")
+
 def display_all(inventory):
-    print("\nCurrent Inventory")
-    print("-" * 55)
+    print("\n========== INVENTORY ==========")
 
-    for product in inventory:
-        print(
-            f"ID: {product['id']} | "
-            f"Name {product['name']} | "
-            f"Price: {product['price']:.2f} | "
-            f"Stock: {product['stock']}"
-        )
+    if len(inventory) == 0:
+        print("Inventory is empty.")
 
-    print("-" * 55)
+    else:
+        for product in inventory:
+            print(
+                f"ID: {product['id']} | "
+                f"Name {product['name']} | "
+                f"Price: {product['price']:.2f} | "
+                f"Stock: {product['stock']}"
+                "------------------------------"
+            )
 
+def add_product(invetntory):
+
+    
 inventory = load_inventory()
 display_all(inventory)
+save_inventory(inventory)
