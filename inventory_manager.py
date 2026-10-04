@@ -27,7 +27,7 @@ inventory = {
 }
 
 def load_inventory():
-    global inventory, transactions
+    global inventory
 
     if os.path.exists("inventory.json"):
         print("inventory.json found.")
@@ -63,7 +63,7 @@ def add_product():
 
     inventory["transactions"].append({
         "product_id": pid,
-        "amount": stock,
+        "amount": price * stock
     })
 
     print("\nProduct added successfully.")
@@ -85,7 +85,7 @@ def update_stock():
 
             inventory["transactions"].append({
                 "product_id": pid,
-                "amount": difference
+                "amount": difference * product["price"]
             })
 
             print("\nStock updated successfully.")
@@ -117,7 +117,7 @@ def display_all():
     print("\nCurrent Inventory")
     print("-" * 50)
 
-    for product in inventory:
+    for product in inventory["products"]:
         print(
             f"ID: {product['id']} | "
             f"Name {product['name']} | "
@@ -137,34 +137,36 @@ def menu():
     print("5. Save Inventory")
     print("6. Exit")
     print("---------------------------")
-    print("=" * 70)
-    print("                 INVENTORY MANAGEMENT SYSTEM")
-    print("=" * 70)
 
-    load_inventory()
+print("=" * 70)
+print("                 INVENTORY MANAGEMENT SYSTEM")
+print("=" * 70)
 
-    while True:
+load_inventory()
 
-        menu()
+while True:
 
-        option = input("\nEnter option: ")
+    menu()
 
-        if option == "1":
-            display_all()
-        elif option == "2":
-            add_product()
-        elif option == "3":
-            update_stock()
-        elif option == "4":
-            search_product()
-        elif option == "5":
-            print("\nSaving inventory...")
-            save_inventory()
-        elif option == "6":
-            print("\nSaving inventory before exit...")
-            save_inventory()
-            print("\nThank you for using Inventory Management System.")
-            print("Program terminated.")
-            break
-        else:
-            print("Invalid option.")
+    option = input("\nEnter option: ")
+
+    if option == "1":
+        display_all()
+    elif option == "2":
+        add_product()
+    elif option == "3":
+        update_stock()
+    elif option == "4":
+        search_product()
+    elif option == "5":
+        print("\nSaving inventory...")
+        save_inventory()
+    elif option == "6":
+        print("\nSaving inventory before exit...")
+        save_inventory()
+        print("\nThank you for using Inventory Management System.")
+        print("Program terminated.")
+        break
+    
+    else:
+        print("Invalid option.")
