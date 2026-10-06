@@ -57,6 +57,25 @@ def save_inventory():
 
     print("Inventory saved successfully to inventory.json.")
 
+def search_product(product_id=None):
+    if product_id is None:
+        product_id = input("Enter Product ID:")
+
+    for product in inventory:
+        if product["id"].lower() == product_id.lower():
+            print("\nProduct Found")
+            print("-" * 50)
+            print(
+                f"ID: {product['id']} | "
+                f"Name: {product['name']} | "
+                f"Price: {product['price']:.2f} | "
+                f"Stock: {product['stock']}"
+            )
+            print("-" * 50)
+            return
+
+    print("\nProduct not found.")
+
 def add_product():
     print("\nAdd New Product")
 
@@ -113,26 +132,6 @@ def update_stock():
     product["transactions"].append(transaction)
 
     print("\nStock updated successfully.")
-
-def search_product(product_id=None):
-    if product_id is None:
-        product_id = input("Enter Product ID:")
-
-    for product in inventory:
-        if product["id"].lower() == product_id.lower():
-            print("\nProduct Found")
-            print("-" * 50)
-            print(
-                f"ID: {product['id']} | "
-                f"Name: {product['name']} | "
-                f"Price: {product['price']:.2f} | "
-                f"Stock: {product['stock']}"
-            )
-            print("-" * 50)
-            return
-
-    print("\nProduct not found.")
-
 
 def display_all():
     print("\nCurrent Inventory")
