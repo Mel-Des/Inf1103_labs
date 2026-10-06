@@ -149,34 +149,41 @@ def menu():
         print("6. Exit")
         print("------------------------")
 
-load_inventory()
+        option = input("\nEnter option: ")
 
-while True:
+        if option == "1":
+            display_all()
+        elif option == "2":
+            add_product()
+        elif option == "3":
+            update_stock()
+        elif option == "4":
+            print("\nSearch Product")
+            product_id = input("Enter Product ID: ")
+            product = search_product()
+            if product is not None:
+                print("\nProduct Found")
+                print("----------------------------------------------")
+                print(f"ID: {product['id']}")
+                print(f"Name: {product['name']}")
+                print(f"Price: ${product['price']:.2f}")
+                print(f"Stock: {product['stock']}")
+                print("----------------------------------------------")
 
-    menu()
-
-    option = input("\nEnter option: ")
-
-    if option == "1":
-        display_all()
-    elif option == "2":
-        add_product()
-    elif option == "3":
-        update_stock()
-    elif option == "4":
-        search_product()
-    elif option == "5":
-        print("\nSaving inventory...")
-        save_inventory()
-    elif option == "6":
-        print("\nSaving inventory before exit...")
-        save_inventory()
-        print("\nThank you for using Inventory Management System.")
-        print("Program terminated.")
-        break
+            else:
+                print("\nProduct not found.")
+        elif option == "5":
+            print("\nSaving inventory...")
+            save_inventory()
+        elif option == "6":
+            print("\nSaving inventory before exit...")
+            save_inventory()
+            print("\nThank you for using Inventory Management System.")
+            print("Program terminated.")
+            break
     
-    else:
-        print("Invalid option.")
+        else:
+            print("Invalid option.")
 
 def main():
     print("=" * 50)
