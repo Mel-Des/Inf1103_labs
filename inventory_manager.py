@@ -160,7 +160,7 @@ def menu():
         elif option == "4":
             print("\nSearch Product")
             product_id = input("Enter Product ID: ")
-            product = search_product()
+            product = search_product(product_id)
             if product is not None:
                 print("\nProduct Found")
                 print("----------------------------------------------")
@@ -175,15 +175,14 @@ def menu():
         elif option == "5":
             print("\nSaving inventory...")
             save_inventory()
+            print("Inventory saved successfully to inventory.json.")
         elif option == "6":
             print("\nSaving inventory before exit...")
             save_inventory()
+            print("Inventory saved successfully.")
             print("\nThank you for using Inventory Management System.")
             print("Program terminated.")
             break
-    
-        else:
-            print("Invalid option.")
 
 def main():
     print("=" * 50)
