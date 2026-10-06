@@ -1,36 +1,36 @@
 import json
 import os
 
-inventory = {
-    "products": [
-        {
-            "id": "P001",
-            "name": "Laptop",
-            "price": 1200.00,
-            "stock": 15
-        },
-        {
-            "id": "P002",
-            "name": "Mouse",
-            "price": 25.50,
-            "stock": 40
-        },
-        {
-            "id": "P003",
-            "name": "Keyboard",
-            "price": 45.00,
-            "stock": 25
-        }
-    ],
-
-    "transactions": []
-}
+inventory = [
+    {
+        "id": "P001",
+        "name": "Laptop",
+        "price": 1200.00,
+        "stock": 15,
+        "transactions": []
+    },
+    {
+        "id": "P002",
+        "name": "Mouse",
+        "price": 25.50,
+        "stock": 40,
+        "transactions": []
+    },
+    {
+        "id": "P003",
+        "name": "Keyboard",
+        "price": 45.00,
+        "stock": 25,
+        "transactions": []
+    }
+]
 
 def load_inventory():
     global inventory
 
     if os.path.exists("inventory.json"):
         print("inventory.json found.")
+
         file =  open("inventory.json", "r")
         data = json.load(file)
         file.close()
@@ -54,8 +54,6 @@ def save_inventory():
     file = open("inventory.json", "w")
     json.dump(data, file, indent=4)
     file.close()
-
-    print("Inventory saved successfully to inventory.json.")
 
 def add_product():
     print("\nAdd New Product")
@@ -128,7 +126,7 @@ def display_all():
     print("\nCurrent Inventory")
     print("-" * 50)
 
-    for product in inventory["products"]:
+    for product in inventory:
         print(
             f"ID: {product['id']} | "
             f"Name: {product['name']} | "
@@ -140,18 +138,16 @@ def display_all():
 
 def menu():
 
-    print("\n----------- MENU -----------")
-    print("1. Display All Products")
-    print("2. Add Product")
-    print("3. Update Stock")
-    print("4. Search Product")
-    print("5. Save Inventory")
-    print("6. Exit")
-    print("------------------------")
+    while True:
 
-print("=" * 70)
-print("                 INVENTORY MANAGEMENT SYSTEM")
-print("=" * 70)
+        print("\n----------- MENU -----------")
+        print("1. Display All Products")
+        print("2. Add Product")
+        print("3. Update Stock")
+        print("4. Search Product")
+        print("5. Save Inventory")
+        print("6. Exit")
+        print("------------------------")
 
 load_inventory()
 
@@ -181,3 +177,16 @@ while True:
     
     else:
         print("Invalid option.")
+
+def main():
+    print("=" * 50)
+    print("INVENTORY MANAGEMENT SYSTEM")
+    print("=" * 50)
+
+    print()
+
+    load_inventory()
+
+    menu()
+
+main()
