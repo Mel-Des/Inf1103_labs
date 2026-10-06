@@ -1,6 +1,11 @@
 import json
 import os
 
+FILE_NAME = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "inventory.json"
+)
+
 inventory = [
     {
         "id": "P001",
@@ -28,10 +33,10 @@ inventory = [
 def load_inventory():
     global inventory
 
-    if os.path.exists("inventory.json"):
+    if os.path.exists(FILE_NAME):
         print("inventory.json found.")
 
-        file =  open("inventory.json", "r")
+        file =  open(FILE_NAME, "r")
         data = json.load(file)
         file.close()
 
@@ -51,7 +56,7 @@ def save_inventory():
         "inventory": inventory
     }
 
-    file = open("inventory.json", "w")
+    file = open(FILE_NAME, "w")
     json.dump(data, file, indent=4)
     file.close()
 
@@ -130,7 +135,7 @@ def display_all():
         print(
             f"ID: {product['id']} | "
             f"Name: {product['name']} | "
-            f"Price: {product['price']:.2f} | "
+            f"Price: ${product['price']:.2f} | "
             f"Stock: {product['stock']}"
         )
 
