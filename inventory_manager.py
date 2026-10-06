@@ -31,18 +31,29 @@ def load_inventory():
 
     if os.path.exists("inventory.json"):
         print("inventory.json found.")
-        with open("inventory.json", "r") as file:
-            inventory = json.load(file)
+        file =  open("inventory.json", "r")
+        data = json.load(file)
+        file.close()
 
-        inventory.setdefault("transactions", [])
+        inventory = data["inventory"]
+
+        for product in inventory:
+            if "transactions" not in product:
+                product["transactions"] = []
+
         print("Inventory loaded successfully.")
     else:
         print("inventory.json not found.")
         print("Starting with an empty inventory.")
 
 def save_inventory():
-    with open("inventory.json", "w")as file:
-        json.dump(inventory, file, indent=4)
+    data = {
+        "inventory": inventory
+    }
+
+    file = open("inventory.json", "w")
+    json.dump(data, file, indent=4)
+    file.close()
 
     print("Inventory saved successfully to inventory.json.")
 
@@ -54,17 +65,23 @@ def add_product():
     price = float(input("Price: "))
     stock = int(input("Stock Quantity: "))
 
-    inventory["products"].append({
+    product = {
         "id": pid,
         "name": name,
         "price": price,
-        "stock": stock
-    })
+        "stock": stock,
+        "transactions": []
+    }
 
-    inventory["transactions"].append({
-        "product_id": pid,
+    transaction = {
+        "type": "ADD",
+        "quantity": stock,
         "amount": price * stock
-    })
+    }
+
+    product["transactions"].append(transaction)
+
+    inventory.append(product)
 
     print("\nProduct added successfully.")
 
@@ -72,33 +89,37 @@ def update_stock():
     print("\nUpdate Stock")
     pid = input("Enter Product ID: ")
 
-    for product in inventory["products"]:
-        if product["id"] == pid:
-            print("\nProduct Found:")
-            print(f"Name: {product['name']}")
-            print(f"Current Stock: {product['stock']}")
+    product = search_product(pid)
 
-            new_stock = int(input("\nNew Stock Quantity:"))
-            difference = new_stock - product["stock"]
+    if product is None:
+        print("\nProduct not found.")
+        return
 
-            product["stock"] = new_stock
+    print("\nProduct Found:")
+    print(f"Name: {product['name']}")
+    print(f"Current Stock: {product['stock']}")
 
-            inventory["transactions"].append({
-                "product_id": pid,
-                "amount": difference * product["price"]
-            })
+    new_stock = int(input("\nNew Stock Quantity:"))
+    difference = new_stock - product["stock"]
 
-            print("\nStock updated successfully.")
-            return
+    product["stock"] = new_stock
 
-    print("\nProduct not found.")
+    transaction = {
+        "type": "STOCK_UPDATE",
+        "quantity": difference,
+        "amount": abs(difference) * product["price"]
+    }
 
-def search_product():
-    print("\nSearch Product")
-    pid = input("Enter Product ID:")
+    product["transactions"].append(transaction)
 
-    for product in inventory["products"]:
-        if product["id"] == pid:
+    print("\nStock updated successfully.")
+
+def search_product(product_id=None):
+    if product_id is None:
+        product_id = input("Enter Product ID:")
+
+    for product in inventory:
+        if product["id"].lower() == product_id.lower():
             print("\nProduct Found")
             print("-" * 50)
             print(
@@ -120,7 +141,7 @@ def display_all():
     for product in inventory["products"]:
         print(
             f"ID: {product['id']} | "
-            f"Name {product['name']} | "
+            f"Name: {product['name']} | "
             f"Price: {product['price']:.2f} | "
             f"Stock: {product['stock']}"
         )
@@ -129,14 +150,14 @@ def display_all():
 
 def menu():
 
-    print("\n---------- MENU ----------")
+    print("\n----------- MENU -----------")
     print("1. Display All Products")
     print("2. Add Product")
     print("3. Update Stock")
     print("4. Search Product")
     print("5. Save Inventory")
     print("6. Exit")
-    print("---------------------------")
+    print("------------------------")
 
 print("=" * 70)
 print("                 INVENTORY MANAGEMENT SYSTEM")
