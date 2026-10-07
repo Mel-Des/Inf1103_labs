@@ -193,7 +193,6 @@ def main():
     print("=" * 50)
     print("INVENTORY MANAGEMENT SYSTEM")
     print("=" * 50)
-
     print()
 
     load_inventory()
