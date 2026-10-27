@@ -7,4 +7,13 @@ class Inventory:
             raise ValueError("Product ID already exists.")
 
         self.__products.append(product)
-        
+
+    def search_product(self, product_id):
+        for product in self.__products:
+            if product.get_product_id() == product_id:
+                return product
+
+        return None
+
+    def display_all(self):
+        print("\nCurrent Inventory")
