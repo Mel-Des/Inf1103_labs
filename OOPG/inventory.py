@@ -17,3 +17,21 @@ class Inventory:
 
     def display_all(self):
         print("\nCurrent Inventory")
+        print("-" * 50)
+
+        if not self.__products:
+            print("No products in inventory.")
+
+        for product in self.__products:
+            print(
+                f"ID: {product.get_product_id()} | "
+                f"Name: {product.get_name()} | "
+                f"Price: {product.get_price():.2f} | "
+                f"Stock: {product.get_stock()}"
+            )
+
+        print("-" * 50)
+
+    def get_all_products(self):
+        return self.__products.copy()
+    
