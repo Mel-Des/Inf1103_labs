@@ -55,3 +55,26 @@ def save_inventory(inventory):
 
     with open(FILE_NAME, "w") as file:
         json.dump(data, file, indent=4)
+
+def add_product(inventory):
+    print("\nAdd New Product")
+
+    pid = input("Product ID: ").strip()
+    name = input("Product Name: ").strip()
+    price = float(input("Price: "))
+    stock = int(input("Stock Quantity: "))
+
+    if pid == "" or name == "":
+        print("Product ID and name cannot be empty.")
+        return
+
+    if price < 0 or stock < 0:
+        print("Price and Stock cannot be negative.")
+        return
+
+    product = Product(pid, name, price, stock)
+    product.record_initial_stock()
+
+    inventory.add_product(product)
+
+    print("\nProduct added successfully.")
