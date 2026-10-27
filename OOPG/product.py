@@ -43,6 +43,13 @@ class Product:
         print(f"Price: ${self.__price:.2f}")
         print(f"Stock: {self.__stock}")
 
+    def record_initial_stock(self):
+        self.__transactions.append({
+            "type": "ADD",
+            "quantity": self.__stock,
+            "amount": self.__price * self.__stock
+        })
+    
     def to_dict(self):
         return{
             "id": self.__product_id,
