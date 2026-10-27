@@ -36,3 +36,18 @@ class Product:
         }
 
         self.__transactions.append(transaction)
+
+    def display_information(self):
+        print(f"ID: {self.__product_id}")
+        print(f"Name: {self.__name}")
+        print(f"Price: ${self.__price:.2f}")
+        print(f"Stock: {self.__stock}")
+
+    def to_dict(self):
+        return{
+            "id": self.__product_id,
+            "name": self.__name,
+            "price": self.__price,
+            "stock": self.__stock,
+            "transactions": self.__transactions
+        }
