@@ -44,3 +44,14 @@ def load_inventory(inventory):
         inventory.add_product(product)
 
     print("Inventory loaded successfully.")
+
+def save_inventory(inventory):
+    data = {
+        "inventory": [
+            product.to_dict()
+            for product in inventory.get_all_products()
+        ]
+    }
+
+    with open(FILE_NAME, "w") as file:
+        json.dump(data, file, indent=4)
