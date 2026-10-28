@@ -22,6 +22,10 @@ def load_inventory(inventory):
             Product("P002", "Mouse", 25.50, 40)
         )
 
+        inventory.add_product(
+            Product("P003", "Keyboard", 45.00, 25)
+        )
+
         return
 
     print("inventory.json found.")
