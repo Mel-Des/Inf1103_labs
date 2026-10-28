@@ -159,3 +159,16 @@ def menu(inventory):
 
         else:
             print("\nInvalid option. Please enter 1 to 6.")
+
+def main():
+    print("=" * 50)
+    print("INVENTORY MANAGEMENT SYSTEM")
+    print("=" * 50)
+
+    inventory = Inventory()
+
+    load_inventory(inventory)
+    menu(inventory)
+
+if __name__ == "__main__":
+    main()
