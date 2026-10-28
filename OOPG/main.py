@@ -78,3 +78,27 @@ def add_product(inventory):
     inventory.add_product(product)
 
     print("\nProduct added successfully.")
+
+def update_stock(inventory):
+    print("\nUpdate Stock")
+    pid = input("Enter Product ID: ").strip()
+
+    product = inventory.search_product(pid)
+
+    if product is None:
+        print("\nProduct not found.")
+        return
+
+    print("\nProduct Found:")
+    print(f"Name: {product.get_name()}")
+    print(f"Current Stock: {product.get_stock()}")
+
+    new_stock = int(input("\nNew Stock Quantity: "))
+
+    if new_stock < 0:
+        print("Stock cannot be negative.")
+        return
+
+    product.update_stock(new_stock)
+
+    print("\nStock updated successfully.")
