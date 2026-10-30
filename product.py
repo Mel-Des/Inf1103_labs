@@ -35,8 +35,6 @@ class Product:
             "amount": abs(difference) * self.__price
         }
 
-        self.__transactions.append(transaction)
-
     def display_information(self):
         print(f"ID: {self.__product_id}")
         print(f"Name: {self.__name}")
