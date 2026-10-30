@@ -26,5 +26,17 @@ class Product(ABC):
 
 class PhysicalProduct(Product):
 
-    def__init__(self, product_id, name, price, stock, weight)
-    
+    def __init__(self, product_id, name, price, stock, weight):
+        super().__init__(product_id, name, price, stock)
+        self.weight = weight
+
+    def display_information(self):
+        super().display_information()
+        print(f"Weight: {self.weight} Kg")
+
+    def get_fulfilment_info(self):
+        return "Requires physical shipping."
+
+    def calculate_shipping_cost(self):
+        return 2.00 + (1.50 * self.weight)
+
