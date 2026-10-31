@@ -65,28 +65,65 @@ def save_inventory(inventory):
     with open(FILE_NAME, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
 
+    print("Inventory saved successfully to inventory.json.")
+
+def ask_non_negative_float(prompt):
+    value = float(input(prompt))
+
+    if value < 0:
+        raise ValueError("Value cannot be negative.")
+
+    return value
+
 def add_product(inventory):
     print("\nAdd New Product")
+    print("1. Physical Product")
+    print("2. Digital Product")
+
+    product_type = input("Choose product type (1 or 2): ").strip()
+
+    if product_type not in ("1", "2"):
+        print("Invalid product type.")
+        return
 
     pid = input("Product ID: ").strip()
     name = input("Product Name: ").strip()
-    price = float(input("Price: "))
-    stock = int(input("Stock Quantity: "))
 
     if pid == "" or name == "":
         print("Product ID and name cannot be empty.")
         return
 
-    if price < 0 or stock < 0:
-        print("Price and Stock cannot be negative.")
+    if inventory.search_product(pid) is not None:
+        print("Product ID already exists.")
+        return
+    
+    price = ask_non_negative_float("Price: $")
+    stock = int(input("Stock Quantity: "))
+
+    if stock < 0:
+        print("Stock cannot be negative.")
         return
 
-    product = Product(pid, name, price, stock)
+    if product_type == "1":
+        weight = ask_non_negative_float("Weight (Kg): ")
+
+        product = PhysicalProduct(
+            pid, name, price, stock, weight
+        )
+
+    else:
+        download_size = ask_non_negative_float("Download Size (MB): ")
+
+        product = DigitalProduct(
+            pid, name, price, stock, download_size
+        )
+
     product.record_initial_stock()
 
     inventory.add_product(product)
 
     print("\nProduct added successfully.")
+    print("Fulfilment:", product.get_fulfilment_info())
 
 def update_stock(inventory):
     print("\nUpdate Stock")
