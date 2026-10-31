@@ -8,30 +8,48 @@ class CanBeShipped(ABC):
 
 class Product(ABC):
 
-    def __init__(self, product_id, name, price, stock):
-        self.__product_id = product_id
-        self.__name = name
-        self.__price = price
-        self.__stock = stock
+    def __init__(self, product_id, name, price, stock, transactions=None):
+        self._product_id = str(product_id)
+        self._name = str(name)
+        self._price = float(price)
+        self._stock = int(stock)
+        self._transactions = transactions if transactions is not None else []
+
+        if self._price < 0:
+            raise ValueError("Price cannot be negative.")
+
+        if self._stock < 0:
+            raise ValueError("Stock cannot be negative.")
 
     def get_product_id(self):
-        return self.__product_id
+        return self._product_id
 
     def get_name(self):
-        return self.__name
+        return self._name
 
     def get_price(self):
-        return self.__price
+        return self._price
 
     def get_stock(self):
-        return self.__stock
+        return self._stock
 
-    def update_stock(self, quantity):
-        if self.__stock + quantity < 0:
-            print("Insufficient stock.")
-            return
+    def get_transactions(self):
+        return self._transactions
 
-        self.__stock += quantity
+    def update_stock(self, new_stock):
+        new_stock = int(new_stock)
+        if new_stock < 0:
+            raise ValueError("Stock cannot be negative.")
+
+        difference = new_stock - self._stock
+
+        self._stock = new_stock
+
+        self._transactions.append({
+            "type": "STOCK_UPDATE",
+            "quantity": difference,
+            "amount": abs(difference) * self._price
+        })
 
     def display_information(self):
         print("Product ID:", self.__product_id)
