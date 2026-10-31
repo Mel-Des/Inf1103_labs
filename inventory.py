@@ -1,6 +1,8 @@
+from product import CanBeShipped
+
 class Inventory:
     def __init__(self):
-        self.__products = []
+        self.products = []
 
     def add_product(self, product):
         if self.search_product(product.get_product_id()) is not None:
@@ -23,14 +25,16 @@ class Inventory:
             print("No products in inventory.")
 
         for product in self.__products:
-            print(
-                f"ID: {product.get_product_id()} | "
-                f"Name: {product.get_name()} | "
-                f"Price: {product.get_price():.2f} | "
-                f"Stock: {product.get_stock()}"
-            )
+            product.display_information()
 
-        print("-" * 50)
+            print("Fulfilment:", product.get_fulfilment_info())
+
+            if isinstance(product, CanBeShipped):
+                print(
+                    f"Shipping Cost: ${product.calculate_shipping_cost():.2f}"
+                )
+
+            print("-" * 50)
 
     def get_all_products(self):
         return self.__products.copy()
