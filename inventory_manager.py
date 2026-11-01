@@ -1,7 +1,7 @@
 import json
 import os
 
-from product import PhysicalProduct, DigitalProduct
+from product import Product, PhysicalProduct, DigitalProduct
 from inventory import Inventory
 
 FILE_NAME = os.path.join(
@@ -35,7 +35,7 @@ def product_from_dict(item):
         )
 
     else:
-        raise ValueError("Unknown product type: " + product_type)
+        raise ValueError("Invalid product type: " + product_type)
 
 def load_inventory(inventory):
     if not os.path.exists(FILE_NAME):
@@ -45,7 +45,7 @@ def load_inventory(inventory):
 
     print("inventory.json found.")
 
-    with open(FILE_NAME, "r", encoding="utf-8") as file:
+    with open(FILE_NAME, "r") as file:
         data =json.load(file)
 
     for item in data.get("inventory", []):
@@ -62,18 +62,10 @@ def save_inventory(inventory):
         ]
     }
 
-    with open(FILE_NAME, "w", encoding="utf-8") as file:
+    with open(FILE_NAME, "w") as file:
         json.dump(data, file, indent=4)
 
     print("Inventory saved successfully to inventory.json.")
-
-def ask_non_negative_float(prompt):
-    value = float(input(prompt))
-
-    if value < 0:
-        raise ValueError("Value cannot be negative.")
-
-    return value
 
 def add_product(inventory):
     print("\nAdd New Product")
@@ -97,22 +89,30 @@ def add_product(inventory):
         print("Product ID already exists.")
         return
     
-    price = ask_non_negative_float("Price: $")
+    price = float(input("Price: $"))
     stock = int(input("Stock Quantity: "))
 
-    if stock < 0:
-        print("Stock cannot be negative.")
+    if price < 0 or stock < 0:
+        print("Price and stock cannot be negative.")
         return
 
     if product_type == "1":
-        weight = ask_non_negative_float("Weight (Kg): ")
+        weight = float(input("Weight (Kg): "))
+
+        if weight < 0:
+            print("Weight cannot be negative.")
+            return
 
         product = PhysicalProduct(
             pid, name, price, stock, weight
         )
 
     else:
-        download_size = ask_non_negative_float("Download Size (MB): ")
+        download_size = float(input("Download Size (MB): "))
+
+        if download_size < 0:
+            print("Download size cannot be negative.")
+            return
 
         product = DigitalProduct(
             pid, name, price, stock, download_size
@@ -123,7 +123,6 @@ def add_product(inventory):
     inventory.add_product(product)
 
     print("\nProduct added successfully.")
-    print("Fulfilment:", product.get_fulfilment_info())
 
 def update_stock(inventory):
     print("\nUpdate Stock")
@@ -136,8 +135,8 @@ def update_stock(inventory):
         return
 
     print("\nProduct Found:")
-    print(f"Name: {product.get_name()}")
-    print(f"Current Stock: {product.get_stock()}")
+    print("Name:", product.get_name())
+    print("Current Stock:", product.get_stock())
 
     new_stock = int(input("\nNew Stock Quantity: "))
 
@@ -164,7 +163,8 @@ def search_product(inventory):
 
         if isinstance(product, PhysicalProduct):
             print(
-                f"Shipping Cost: ${product.get_shipping_cost():.2f}"
+                "Shipping Cost: $",
+                f"{product.calculate_shipping_cost():.2f}"
             )
         print("-" * 50)
 
@@ -199,12 +199,10 @@ def menu(inventory):
         elif option == "5":
             print("\nSaving inventory...")
             save_inventory(inventory)
-            print("Inventory saved successfully to inventory.json.")
 
         elif option == "6":
             print("\nSaving inventory before exit...")
             save_inventory(inventory)
-            print("Inventory saved successfully.")
 
             print("\nThank you for using Inventory Management System.")
             print("Program terminated.")
