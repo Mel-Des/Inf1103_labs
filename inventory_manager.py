@@ -159,6 +159,13 @@ def search_product(inventory):
         print("\nProduct found")
         print("-" * 50)
         product.display_information()
+
+        print("Fulfilment:", product.get_fulfilment_info())
+
+        if isinstance(product, PhysicalProduct):
+            print(
+                f"Shipping Cost: ${product.get_shipping_cost():.2f}"
+            )
         print("-" * 50)
 
     else:
