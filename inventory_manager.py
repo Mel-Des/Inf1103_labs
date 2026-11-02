@@ -1,7 +1,9 @@
 import json
 import os
 
-from product import Product, PhysicalProduct, DigitalProduct
+from product import Product
+from physical_product import PhysicalProduct
+from digital_product import DigitalProduct
 from inventory import Inventory
 
 FILE_NAME = os.path.join(
@@ -123,6 +125,7 @@ def add_product(inventory):
     inventory.add_product(product)
 
     print("\nProduct added successfully.")
+    print("Fulfilment:", product.get_fulfilment_info())
 
 def update_stock(inventory):
     print("\nUpdate Stock")
