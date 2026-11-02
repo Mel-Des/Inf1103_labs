@@ -1,4 +1,4 @@
-from product import CanBeShipped
+from can_be_shipped import CanBeShipped
 
 class Inventory:
     def __init__(self):
