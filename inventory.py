@@ -2,7 +2,7 @@ from can_be_shipped import CanBeShipped
 
 class Inventory:
     def __init__(self):
-        self.products = []
+        self.__products = []
 
     def add_product(self, product):
         if self.search_product(product.get_product_id()) is not None:
