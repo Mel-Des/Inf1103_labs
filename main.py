@@ -1,7 +1,7 @@
 import json
 import os
 
-from product import Product
+from product import PhysicalProduct, DigitalProduct
 from inventory import Inventory
 
 FILE_NAME = os.path.join(
@@ -9,38 +9,47 @@ FILE_NAME = os.path.join(
     "inventory.json"
 )
 
-def load_inventory(inventory):
-    if not os.path.exists(FILE_NAME):
-        print("inventory.json not found.")
-        print("Starting with an empty inventory.")
+def product_from_dict(item):
+    transactions = item.get("transactions", [])
 
-        inventory.add_product(
-            Product("P001", "Laptop", 1200.00, 15)
-        )
+    product_type = item.get("type", "physical")
 
-        inventory.add_product(
-            Product("P002", "Mouse", 25.50, 40)
-        )
-
-        inventory.add_product(
-            Product("P003", "Keyboard", 45.00, 25)
-        )
-        return
-
-    print("inventory.json found.")
-
-    with open(FILE_NAME, "r") as file:
-        data =json.load(file)
-
-    for item in data["inventory"]:
-        product = Product(
+    if product_type == "physical":
+        return PhysicalProduct(
             item["id"],
             item["name"],
             item["price"],
             item["stock"],
-            item.get("transactions", [])
+            item.get("weight", 0.0),
+            transactions
         )
 
+    elif product_type == "digital":
+        return DigitalProduct(
+            item["id"],
+            item["name"],
+            item["price"],
+            item["stock"],
+            item.get("download_size", 0.0),
+            transactions
+        )
+
+    else:
+        raise ValueError("Unknown product type: " + product_type)
+
+def load_inventory(inventory):
+    if not os.path.exists(FILE_NAME):
+        print("inventory.json not found.")
+        print("Starting with an empty inventory.")
+        return
+
+    print("inventory.json found.")
+
+    with open(FILE_NAME, "r", encoding="utf-8") as file:
+        data =json.load(file)
+
+    for item in data.get("inventory", []):
+        product = product_from_dict(item)
         inventory.add_product(product)
 
     print("Inventory loaded successfully.")
@@ -53,7 +62,7 @@ def save_inventory(inventory):
         ]
     }
 
-    with open(FILE_NAME, "w") as file:
+    with open(FILE_NAME, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
 
 def add_product(inventory):
