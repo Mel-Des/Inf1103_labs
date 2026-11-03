@@ -1,7 +1,7 @@
 from product import Product
 from can_be_shipped import CanBeShipped
 
-class PhysicalProduct(Product, CanBeShipped):
+class PhysicalProduct(Product):
 
     def __init__(self, product_id, name, price, stock, weight, transactions=None):
         super().__init__(product_id, name, price, stock, transactions)
@@ -9,6 +9,9 @@ class PhysicalProduct(Product, CanBeShipped):
 
         if self.__weight < 0:
             raise ValueError("Weight cannot be negative.")
+
+    def get_weight(self):
+        return self.__weight
 
     def display_information(self):
         super().display_information()
@@ -25,3 +28,5 @@ class PhysicalProduct(Product, CanBeShipped):
         data["type"] = "physical"
         data["weight"] = self.__weight
         return data
+
+CanBeShipped.register(PhysicalProduct)
