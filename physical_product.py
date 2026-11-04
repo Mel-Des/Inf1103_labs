@@ -2,6 +2,7 @@ from product import Product
 from can_be_shipped import CanBeShipped
 
 class PhysicalProduct(Product):
+    product_type = "physical"
 
     def __init__(self, product_id, name, price, stock, weight, transactions=None):
         super().__init__(product_id, name, price, stock, transactions)
