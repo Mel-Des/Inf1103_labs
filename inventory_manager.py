@@ -164,7 +164,7 @@ def search_product(inventory):
 
         print("Fulfilment:", product.get_fulfilment_info())
 
-        if isinstance(product, PhysicalProduct):
+        if product.product_type == "physical":
             print(
                 "Shipping Cost: $",
                 f"{product.calculate_shipping_cost():.2f}"
