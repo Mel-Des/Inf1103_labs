@@ -4,7 +4,9 @@ import os
 from product import Product
 from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
+from supplier import Supplier
 from inventory import Inventory
+from order import Order
 
 FILE_NAME = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -97,6 +99,12 @@ def add_product(inventory):
     if price < 0 or stock < 0:
         print("Price and stock cannot be negative.")
         return
+
+    supplier = Supplier(
+        supplier_id,
+        supplier_name,
+        supplier_email
+    )
 
     if product_type == "1":
         weight = float(input("Weight (Kg): "))
