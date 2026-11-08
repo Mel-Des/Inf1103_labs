@@ -252,21 +252,25 @@ def create_order(inventory: Inventory) -> None:
 
     print(f"Total Amount: ${order.calculate_total():.2f}")
 
-def menu(inventory):
+def menu() -> None:
+    inventory = load_inventory()
+
     while True:
         print("\n----------- MENU -----------")
         print("1. Display All Products")
         print("2. Add Product")
         print("3. Update Stock")
         print("4. Search Product")
-        print("5. Save Inventory")
-        print("6. Exit")
+        print("5. Remove Product")
+        print("6. Create Order")
+        print("7. Save Inventory")
+        print("8. Exit")
         print("------------------------")
 
         option = input("\nEnter option: ").strip()
 
         if option == "1":
-            inventory.display_all()
+            display_products(inventory)
 
         elif option == "2":
             add_product(inventory)
@@ -278,10 +282,16 @@ def menu(inventory):
             search_product(inventory)
 
         elif option == "5":
+            remove_product(inventory)
+
+        elif option == "6":
+            create_order(inventory)
+
+        elif option == "7":
             print("\nSaving inventory...")
             save_inventory(inventory)
 
-        elif option == "6":
+        elif option == "8":
             print("\nSaving inventory before exit...")
             save_inventory(inventory)
 
@@ -292,7 +302,7 @@ def menu(inventory):
         else:
             print("\nInvalid option. Please enter 1 to 6.")
 
-def main():
+def main() -> None:
     print("=" * 50)
     print("INVENTORY MANAGEMENT SYSTEM")
     print("=" * 50)
@@ -300,7 +310,7 @@ def main():
     inventory = Inventory()
 
     load_inventory(inventory)
-    menu(inventory)
+    menu()
 
 if __name__ == "__main__":
     main()
