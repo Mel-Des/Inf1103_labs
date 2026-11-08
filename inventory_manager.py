@@ -13,7 +13,15 @@ FILE_NAME = os.path.join(
     "inventory.json"
 )
 
-def product_from_dict(item):
+def product_from_dict(item: dict) -> Product:
+    supplier_data = item.get("supplier", {})
+
+    supplier = Supplier(
+        supplier_data.get("supplier_id", "S000"),
+        supplier_data.get("name", "Unknown Supplier"),
+        supplier_data.get("contact_email", "unknown@example.com")
+    )
+
     transactions = item.get("transactions", [])
 
     product_type = item.get("type", "physical")
@@ -25,6 +33,7 @@ def product_from_dict(item):
             item["price"],
             item["stock"],
             item.get("weight", 0.0),
+            supplier,
             transactions
         )
 
@@ -35,19 +44,18 @@ def product_from_dict(item):
             item["price"],
             item["stock"],
             item.get("download_size", 0.0),
+            supplier,
             transactions
         )
 
     else:
         raise ValueError("Invalid product type: " + product_type)
 
-def load_inventory(inventory):
-    if not os.path.exists(FILE_NAME):
-        print("inventory.json not found.")
-        print("Starting with an empty inventory.")
-        return
+def load_inventory() -> Inventory:
+    inventory = Inventory()
 
-    print("inventory.json found.")
+    if not os.path.exists(FILE_NAME):
+        return inventory
 
     with open(FILE_NAME, "r") as file:
         data =json.load(file)
@@ -56,9 +64,9 @@ def load_inventory(inventory):
         product = product_from_dict(item)
         inventory.add_product(product)
 
-    print("Inventory loaded successfully.")
+    return inventory
 
-def save_inventory(inventory):
+def save_inventory(inventory: Inventory) -> None:
     data = {
         "inventory": [
             product.to_dict()
@@ -71,34 +79,31 @@ def save_inventory(inventory):
 
     print("Inventory saved successfully to inventory.json.")
 
-def add_product(inventory):
+def add_product(inventory: Inventory) -> None:
     print("\nAdd New Product")
+    print("-" * 40)
+
+    product_id = input("Enter Product ID: ")
+
+    if inventory.find_product(product_id) is not None:
+        print("Product ID already exists.")
+        return
+
+    name = input("Enter Product Name: ")
+    price = float(input("Enter Product Price: $"))
+    stock = int(input("Enter Product Stock: "))
+
+    print("\nSelect Product Type")
     print("1. Physical Product")
     print("2. Digital Product")
 
-    product_type = input("Choose product type (1 or 2): ").strip()
+    product_type = input("Choose product type (1 or 2): ")
 
-    if product_type not in ("1", "2"):
-        print("Invalid product type.")
-        return
+    print("\n--- Supplier Information ---")
 
-    pid = input("Product ID: ").strip()
-    name = input("Product Name: ").strip()
-
-    if pid == "" or name == "":
-        print("Product ID and name cannot be empty.")
-        return
-
-    if inventory.search_product(pid) is not None:
-        print("Product ID already exists.")
-        return
-    
-    price = float(input("Price: $"))
-    stock = int(input("Stock Quantity: "))
-
-    if price < 0 or stock < 0:
-        print("Price and stock cannot be negative.")
-        return
+    supplier_id = input("Enter Supplier ID: ")
+    supplier_name = input("Enter Supplier Name: ")
+    supplier_email = input("Enter Supplier Email: ")
 
     supplier = Supplier(
         supplier_id,
@@ -114,10 +119,10 @@ def add_product(inventory):
             return
 
         product = PhysicalProduct(
-            pid, name, price, stock, weight
+            product_id, name, price, stock, weight, supplier
         )
 
-    else:
+    elif product_type == "2":
         download_size = float(input("Download Size (MB): "))
 
         if download_size < 0:
@@ -125,17 +130,24 @@ def add_product(inventory):
             return
 
         product = DigitalProduct(
-            pid, name, price, stock, download_size
+            product_id, name, price, stock, download_size
         )
+
+    else:
+        print("Invalid product type.")
+        return
 
     product.record_initial_stock()
 
     inventory.add_product(product)
+    save_inventory(inventory)
 
     print("\nProduct added successfully.")
-    print("Fulfilment:", product.get_fulfilment_info())
 
-def update_stock(inventory):
+def display_products(inventory: Inventory) -> None:
+    inventory.display_all()
+
+def update_stock(inventory: Inventory) -> None:
     print("\nUpdate Stock")
     pid = input("Enter Product ID: ").strip()
 
@@ -157,9 +169,11 @@ def update_stock(inventory):
 
     product.update_stock(new_stock)
 
+    save_inventory(inventory)
+
     print("\nStock updated successfully.")
 
-def search_product(inventory):
+def search_product(inventory: Inventory) -> None:
     print("\nSearch Product")
     pid = input("Enter Product ID: ").strip()
 
@@ -181,6 +195,62 @@ def search_product(inventory):
 
     else:
         print("\nProduct not found.")
+
+def remove_product(inventory: Inventory) -> None:
+    print("\nRemove Product")
+
+    product_id = input("Enter Product ID: ")
+
+    removed = inventory.remove_product(product_id)
+
+    if removed:
+        save_inventory(inventory)
+        print("Product removed successfully.")
+    else:
+        print("Product not found.")
+
+def create_order(inventory: Inventory) -> None:
+    print("\nCreate Order")
+
+    order_id = input("Enter Order ID: ")
+
+    order = Order(order_id)
+
+    while True:
+        product_id = input("Enter Product ID (or 'done' to finish): ")
+
+        if product_id.lower() == "done":
+            break
+
+        product = inventory.find_product(product_id)
+
+        if product is None:
+            print("Product not found.")
+            continue
+
+        quantity = int(input("Enter Quantity: "))
+
+        if quantity <= 0:
+            print("Quantity must be greater than zero.")
+            continue
+
+        if quantity > product.get_stock():
+            print("Not enough stock available.")
+            continue
+
+        order.add_order_line(product, quantity)
+
+        print("Product added to order.")
+
+    if len(order.order_lines) == 0:
+        print("No products were added to the order.")
+        return
+
+    print("\nOrder Summary:")
+
+    order.display_order()
+
+    print(f"Total Amount: ${order.calculate_total():.2f}")
 
 def menu(inventory):
     while True:
