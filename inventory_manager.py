@@ -137,6 +137,8 @@ def add_product(inventory: Inventory) -> None:
         print("Invalid product type.")
         return
 
+    del supplier
+
     product.record_initial_stock()
 
     inventory.add_product(product)
