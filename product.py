@@ -18,8 +18,7 @@ class Product(ABC):
         if self._stock < 0:
             raise ValueError("Stock cannot be negative.")
 
-    @property
-    def price(self) -> float:
+    def get_price(self) -> float:
         return self._price
 
     def get_product_id(self) -> str:
