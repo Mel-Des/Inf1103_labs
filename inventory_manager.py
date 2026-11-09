@@ -308,10 +308,6 @@ def main() -> None:
     print("=" * 50)
     print("INVENTORY MANAGEMENT SYSTEM")
     print("=" * 50)
-
-    inventory = Inventory()
-
-    load_inventory(inventory)
     menu()
 
 if __name__ == "__main__":
