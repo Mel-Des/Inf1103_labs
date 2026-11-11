@@ -17,9 +17,9 @@ def product_from_dict(item: dict) -> Product:
     supplier_data = item.get("supplier", {})
 
     supplier = Supplier(
-        supplier_data.get("supplier_id", "S000"),
-        supplier_data.get("name", "Unknown Supplier"),
-        supplier_data.get("contact_email", "unknown@example.com")
+        supplier_data.get("supplier_id", "S001"),
+        supplier_data.get("name", "ABC Supplier"),
+        supplier_data.get("contact_email", "ABC@example.com")
     )
 
     transactions = item.get("transactions", [])
@@ -130,14 +130,12 @@ def add_product(inventory: Inventory) -> None:
             return
 
         product = DigitalProduct(
-            product_id, name, price, stock, download_size
+            product_id, name, price, stock, download_size, supplier
         )
 
     else:
         print("Invalid product type.")
         return
-
-    del supplier
 
     product.record_initial_stock()
 
