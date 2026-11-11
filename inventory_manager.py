@@ -177,7 +177,7 @@ def search_product(inventory: Inventory) -> None:
     print("\nSearch Product")
     pid = input("Enter Product ID: ").strip()
 
-    product = inventory.search_product(pid)
+    product = inventory.find_product(pid)
 
     if product is not None:
         print("\nProduct found")
@@ -185,12 +185,7 @@ def search_product(inventory: Inventory) -> None:
         product.display_information()
 
         print("Fulfilment:", product.get_fulfilment_info())
-
-        if product.product_type == "physical":
-            print(
-                "Shipping Cost: $",
-                f"{product.calculate_shipping_cost():.2f}"
-            )
+        print("Shipping:", product.get_shipping_info())
         print("-" * 50)
 
     else:
