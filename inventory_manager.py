@@ -295,7 +295,7 @@ def menu() -> None:
             break
 
         else:
-            print("\nInvalid option. Please enter 1 to 6.")
+            print("\nInvalid option. Please enter 1 to 8.")
 
 def main() -> None:
     print("=" * 50)
